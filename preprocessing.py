@@ -58,9 +58,9 @@ def merge_classified_unclassified(base_dir='categories'):
                 try:
                     # Read classified CSV and keep only relevant columns
                     classified = pd.read_csv(file_path)
-                    classified_relevant = classified[['auto_issues', 'segment_text']].copy()
+                    classified_relevant = classified[['segment_id', 'auto_issues', 'segment_text']].copy()
                     # Rename columns for consistency
-                    classified_relevant.columns = ['segment_labels', 'segment_text']
+                    classified_relevant.columns = ['segment_id', 'segment_labels', 'segment_text']
                     # Add column to indicate type of segment
                     classified_relevant['segment_type'] = 'classified'
                 except KeyError as e:
@@ -71,9 +71,9 @@ def merge_classified_unclassified(base_dir='categories'):
                 try:
                     # Read unclassified CSV and keep only segment_text column
                     unclassified = pd.read_csv(file_path)
-                    unclassified_relevant = unclassified[['segment_text']].copy()
+                    unclassified_relevant = unclassified[['segment_id', 'segment_text']].copy()
                     # Rename column for consistency
-                    unclassified_relevant.columns = ['segment_text']
+                    unclassified_relevant.columns = ['segment_id', 'segment_text']
                     # Add columns to indicate type and empty label list
                     unclassified_relevant[['segment_type', 'segment_labels']] = 'unclassified', '[]'
                 except KeyError as e:
