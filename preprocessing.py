@@ -126,7 +126,36 @@ def rename_guidance_files(base_dir='categories'):
 
     print()
 
+
+def guidance_csv_to_json(base_dir='categories'):
+    initiation_comment = f'Converting guidance CSV into JSON: "{base_dir}"'
+    categories, max_len = preprocessing_utils(base_dir, initiation_comment)
+
+    if not categories:
+        return f"Base directory does not exist: {base_dir}"
+
+    for category in categories:
+        guidance_path = os.path.join(base_dir, category, f'{category}_guidance.csv')
+        output_path = guidance_path.replace(".csv", ".json")
+
+        try:
+            guidance = pd.read_csv(guidance_path)
+            guidance = guidance.fillna('')
+
+            json_str = guidance.to_json(orient="records", indent=2, force_ascii=False)
+            # print(json_str)
+            with open(output_path, "w", encoding="utf-8") as f:
+                f.write(json_str)
+
+            print(f'Saved: {category:<{max_len}} - {output_path}')
+        except:
+            print(f"Empty: {category:<{max_len}} - {category}_guidance.csv does not exist")
+
+    print()
+
+
 # Run the merge function only if this script is executed directly
 if __name__ == "__main__":
     merge_classified_unclassified()
     rename_guidance_files()
+    guidance_csv_to_json()
